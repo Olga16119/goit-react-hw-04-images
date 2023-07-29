@@ -39,9 +39,11 @@ const App = () => {
       setIsLoading(false);
       return alert(`Sorry, nothing was found for your request`);
     }
+
     if (page === 1 && responce.hits.length) {
       console.log(` ${responce.totalHits} image(s) have been found`);
     }
+    
     if (page === totalPage) {
       console.log('All images for this request are already available');
       setLoadMore(false);
