@@ -73,6 +73,8 @@ const App = () => {
     setPage(1);
   };
 
+  
+
   return (
     <>
       <div className={css.App}>
