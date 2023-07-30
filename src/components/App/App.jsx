@@ -8,7 +8,6 @@ import css from './App.module.css';
 import { useEffect, useState } from 'react';
 
 const App = () => {
-  
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [loadMore, setLoadMore] = useState(false);
@@ -19,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     searchImagesData();
-  }, [page, imageName])
+  }, [page, imageName]);
 
   async function searchImagesData() {
     if (!imageName) {
@@ -32,25 +31,29 @@ const App = () => {
     }
     setIsLoading(true);
 
-    const responce = await searchImages(imageName, page);
-    const totalPage = Math.ceil(responce.totalHits / 12);
+    try {
+      const responce = await searchImages(imageName, page);
+      const totalPage = Math.ceil(responce.totalHits / 12);
 
-    if (!responce.hits.length) {
+      if (!responce.hits.length) {
+        setIsLoading(false);
+        return alert(`Sorry, nothing was found for your request`);
+      }
+
+      if (page === 1 && responce.hits.length) {
+        console.log(` ${responce.totalHits} image(s) have been found`);
+      }
+
+      if (page === totalPage) {
+        console.log('All images for this request are already available');
+        setLoadMore(false);
+      }
+
+      setImages([...images, ...responce.hits]);
       setIsLoading(false);
-      return alert(`Sorry, nothing was found for your request`);
+    } catch (error) {
+      console.log(error);
     }
-
-    if (page === 1 && responce.hits.length) {
-      console.log(` ${responce.totalHits} image(s) have been found`);
-    }
-    
-    if (page === totalPage) {
-      console.log('All images for this request are already available');
-      setLoadMore(false);
-    }
-
-    setImages([...images, ...responce.hits]);
-    setIsLoading(false);
   }
 
   const onClickLoadMore = async () => {
@@ -66,14 +69,12 @@ const App = () => {
     }
   };
 
-  const searchHandler = async( imageName) => {
+  const searchHandler = async imageName => {
     setImageName(imageName);
     setImages([]);
     setLoadMore(true);
     setPage(1);
   };
-
-  
 
   return (
     <>
