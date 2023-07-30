@@ -3,10 +3,10 @@ import css from './Modal.module.css';
 import { useEffect } from 'react';
 
 const Modal = ({ data, onClose }) => {
-  useEffect = () => {
+  useEffect(() => {
     window.addEventListener('keydown', event => onCloseModal(event));
     return window.removeEventListener('keydown', event => onCloseModal(event));
-  };
+  });
 
   const onCloseModal = e => {
     if (e.code === 'Escape' || e.target === e.currentTarget) {

@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     searchImagesData();
-  }, [page, imageName]);
+  }, [page, imageName])
 
   async function searchImagesData() {
     if (!imageName) {
@@ -27,7 +27,7 @@ const App = () => {
     }
 
     if (page === 1) {
-      setLoadMore(false);
+      onClickLoadMore(false);
       setImages([]);
     }
     setIsLoading(true);
@@ -66,7 +66,7 @@ const App = () => {
     }
   };
 
-  const searchHandler = async imageName => {
+  const searchHandler = async( imageName) => {
     setImageName(imageName);
     setImages([]);
     setLoadMore(true);
