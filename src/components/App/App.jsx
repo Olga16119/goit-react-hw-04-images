@@ -17,44 +17,42 @@ const App = () => {
   const [imageName, setImageName] = useState('');
 
   useEffect(() => {
+    async function searchImagesData() {
+      if (!imageName) {
+        return;
+      }
+
+      if (page === 1) {
+        onClickLoadMore(false);
+        setImages([]);
+      }
+      setIsLoading(true);
+
+      try {
+        const responce = await searchImages(imageName, page);
+        const totalPage = Math.ceil(responce.totalHits / 12);
+
+        if (!responce.hits.length) {
+          setIsLoading(false);
+          return alert(`Sorry, nothing was found for your request`);
+        }
+
+        if (page === 1 && responce.hits.length) {
+          console.log(` ${responce.totalHits} image(s) have been found`);
+        }
+
+        if (page === totalPage) {
+          console.log('All images for this request are already available');
+          setLoadMore(false);
+        }
+        setImages(prev => [...prev, ...responce.hits]);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     searchImagesData();
   }, [page, imageName]);
-
-  async function searchImagesData() {
-    if (!imageName) {
-      return;
-    }
-
-    if (page === 1) {
-      onClickLoadMore(false);
-      setImages([]);
-    }
-    setIsLoading(true);
-
-    try {
-      const responce = await searchImages(imageName, page);
-      const totalPage = Math.ceil(responce.totalHits / 12);
-
-      if (!responce.hits.length) {
-        setIsLoading(false);
-        return alert(`Sorry, nothing was found for your request`);
-      }
-
-      if (page === 1 && responce.hits.length) {
-        console.log(` ${responce.totalHits} image(s) have been found`);
-      }
-
-      if (page === totalPage) {
-        console.log('All images for this request are already available');
-        setLoadMore(false);
-      }
-
-      setImages([...images, ...responce.hits]);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const onClickLoadMore = async () => {
     setPage(prevPage => prevPage + 1);
@@ -68,7 +66,6 @@ const App = () => {
       setModalValue({});
     }
   };
-  
 
   const searchHandler = async imageName => {
     setImageName(imageName);
