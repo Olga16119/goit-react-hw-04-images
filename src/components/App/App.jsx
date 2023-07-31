@@ -68,6 +68,7 @@ const App = () => {
       setModalValue({});
     }
   };
+  
 
   const searchHandler = async imageName => {
     setImageName(imageName);
